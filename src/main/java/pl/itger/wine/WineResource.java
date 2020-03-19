@@ -1,16 +1,17 @@
 package pl.itger.wine;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.MalformedJsonException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -34,17 +35,14 @@ public class WineResource {
     public void init() throws IOException {
         LOGGER.setLevel(Level.ALL);
         LOGGER.info("init() START");
-        //Gson gson = new Gson();
         Gson gson = new GsonBuilder().create();
         Type listType = new TypeToken<ArrayList<LinkedTreeMap<String, ?>>>() {
         }.getType();
-        //String fName = "/winemag-data-130k-v2-";
         File file = null;
         JsonObject jsonObject = new JsonObject();
         JsonElement jsonElement = jsonObject;
         int i = 0;
         LOGGER.info("*** 1");
-        //Resource resource = new ClassPathResource("winemag-data-130k-v2.json");
         Resource resource = new ClassPathResource("winemag-data-130k-v2.json");
         final WeakReference<Resource> ref = new WeakReference<>(resource);
         InputStream inputStream = ref.get().getInputStream();
@@ -53,16 +51,6 @@ public class WineResource {
             System.gc();
         }
         LOGGER.info("*** 2");
-        //InputStream inputStream = resource.getInputStream();
-//        try (BufferedReader in = new BufferedReader(new InputStreamReader(inputStream))) {
-//            jsonElement = JsonParser.parseReader(in);
-//        } catch (MalformedJsonException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (NumberFormatException e) {
-//            e.printStackTrace();
-//        }
         try {
             Reader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
             final WeakReference<Reader> readerWeakReference = new WeakReference<>(bufferedReader);
@@ -82,29 +70,6 @@ public class WineResource {
             e.printStackTrace();
         }
         LOGGER.info("***  optionalLinkedTreeMaps.isEmpty(): " + optionalLinkedTreeMaps.isEmpty());
-//        int ii =0;
-//        try(JsonReader jsonReader = new JsonReader(new InputStreamReader(inputStream, "UTF-8"))) {
-//            LOGGER.info("*** 4");
-//            jsonReader.beginArray();
-//            LOGGER.info("*** 5");
-//            while (jsonReader.hasNext()){
-//                LOGGER.info(String.valueOf(ii));
-//                gson.fromJson(jsonReader, listType);
-//                //list.add( gson.fromJson(jsonReader, listType));
-//                //do something real
-//            }
-//            LOGGER.info("*** 6");
-//        }
-//        catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        //optionalLinkedTreeMaps = Optional.ofNullable(gson.fromJson(jsonElement, listType));
-        //LOGGER.info("*** list.size() " + list.size());
         LOGGER.info("init() END");
     }
 
