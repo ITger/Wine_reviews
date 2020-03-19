@@ -22,4 +22,6 @@ curl -X GET "http://wine-resource.appspot.com/api/WineGlass/wineSelection?countr
 
 curl -X GET "http://wine-resource.appspot.com/api/WineGlass/wineSelection?country=Spain&variety=Red%20Blend&description=aromas%20of%20chewing%20gum" -H "accept: */*"
 
+Details (in Polish) here: https://zerynger.wordpress.com/2020/03/19/wino-i-stream-api/
+
 
