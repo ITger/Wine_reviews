@@ -38,7 +38,6 @@ public class WineResource {
         Gson gson = new GsonBuilder().create();
         Type listType = new TypeToken<ArrayList<LinkedTreeMap<String, ?>>>() {
         }.getType();
-        File file = null;
         JsonObject jsonObject = new JsonObject();
         JsonElement jsonElement = jsonObject;
         int i = 0;
@@ -131,6 +130,7 @@ public class WineResource {
         }
         List<LinkedTreeMap<String, ?>> linkedTreeMaps = stream
                 .filter(compositePredicate)
+                .limit(20)
                 .collect(Collectors.toList());
         return linkedTreeMaps;
     }
