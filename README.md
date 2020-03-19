@@ -5,6 +5,7 @@ Sample project on how to parse a large json file,
 how to use composite predicates on java stream.
 
 The dataset was taken from https://www.kaggle.com/zynicide/wine-reviews#winemag-data-130k-v2.json
+To use this sample project you must download the winemag-data-130k-v2.json to the src/main/resources/ folder!
 
 This sample is running on Google cloud:
 
