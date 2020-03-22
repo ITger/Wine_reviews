@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Wine_data</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Wine repository</description>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -51,13 +51,13 @@
                 </configuration>
             </plugin>
             <!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-compiler-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <source>10</source>-->
-<!--                    <target>10</target>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+            <!--                <configuration>-->
+            <!--                    <source>10</source>-->
+            <!--                    <target>10</target>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
     <dependencies>
@@ -74,11 +74,11 @@
             <optional>true</optional>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.data</groupId>-->
-<!--            <artifactId>spring-data-rest-hal-explorer</artifactId>-->
-<!--            <version>3.2.5.RELEASE</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.data</groupId>-->
+        <!--            <artifactId>spring-data-rest-hal-explorer</artifactId>-->
+        <!--            <version>3.2.5.RELEASE</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -127,17 +127,18 @@
             <scope>test</scope>
         </dependency>
 
-           <dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.6</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.springfox.ui</groupId>
-            <artifactId>springfox-swagger-ui-rfc6570</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>io.springfox.ui</groupId>-->
+        <!--            <artifactId>springfox-swagger-ui-rfc6570</artifactId>-->
+        <!--            <version>1.0.0</version>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>io.springfox</groupId>
@@ -145,11 +146,11 @@
             <version>2.9.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.9.2</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>io.springfox</groupId>-->
+        <!--            <artifactId>springfox-swagger-ui</artifactId>-->
+        <!--            <version>2.9.2</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
