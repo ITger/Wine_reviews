@@ -6,16 +6,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import lombok.Data;
-import org.springframework.context.annotation.Description;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -28,10 +27,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 /**
- * http://localhost:8080/v2/api-docs
- * http://localhost:8080/swagger-ui.html
+ * http://localhost:8081/v2/api-docs
+ * http://localhost:8081/swagger-ui.html
  */
 @RestController
 @RequestMapping("/api/WineGlass")
@@ -112,75 +110,44 @@ public class WineResource {
      * "variety": "Tempranillo"
      * }
      *
-     * @param stringMapQueryPredicates
+     *
      * @return List<LinkedTreeMap < String, ?>>
      */
-    @GetMapping(path = "/wineSelection", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Description(value = "Sample request:\n" +
-            "      {\n" +
-            "      \"country\": \"Spain\",\n" +
-            "      \"description\":\"horseradish\",\n" +
-            "      \"variety\": \"Tempranillo\"\n" +
-            "      }")
-    public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection(
-            @RequestParam Map<String, String> stringMapQueryPredicates) {
-        LOGGER.config("wineSelection predicates: ".concat(stringMapQueryPredicates.toString()));
-        Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
-        List<Predicate<LinkedTreeMap<String, ?>>> predicateList = new ArrayList<>();
-        stringMapQueryPredicates.forEach((k, v) -> {
-            predicateList.add(x -> {
-                return Objects.nonNull(x.get(k));
-            });
-            predicateList.add(x -> {
-                return x.get(k).toString().contains(v);
-            });
-        });
-        Predicate<LinkedTreeMap<String, ?>> compositePredicate = predicateList.get(0);
-        for (int i = 1; i < predicateList.size(); i++) {
-            compositePredicate = compositePredicate.and(predicateList.get(i));
-        }
-        Optional<List<LinkedTreeMap<String, ?>>> linkedTreeMaps = Optional.ofNullable(stream
-                .filter(compositePredicate)
-                .limit(20)
-                .collect(Collectors.toList()));
-        return ResponseEntity.of(linkedTreeMaps);
-    }
-
 //    @ResponseStatus(value = HttpStatus.OK)
-//    @GetMapping(path = "/wineSelection_XXX", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "xxx")})
-//    public WineRequestData wineSelection_XXX() {
-//        WineRequestData a = new WineRequestData();
-//        Map<String, Set<String>> m = new HashMap<>();
-//        m.put("XXX", Stream.of("aaa", "bbb", "ccc").collect(Collectors.toCollection(HashSet::new)));
-//        m.put("ZZZ", Stream.of("xxx", "yyy", "zzz").collect(Collectors.toCollection(HashSet::new)));
-//        a.setQry(m);
-//        return a;
+//    @GetMapping(path = "/wineSelection", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection(
+//            @RequestBody Map<String, String> stringMapQueryPredicates) {
+//        LOGGER.config("wineSelection predicates: ".concat(stringMapQueryPredicates.toString()));
+//        Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
+//        List<Predicate<LinkedTreeMap<String, ?>>> predicateList = new ArrayList<>();
+//        stringMapQueryPredicates.forEach((k, v) -> {
+//            predicateList.add(x -> {
+//                return Objects.nonNull(x.get(k));
+//            });
+//            predicateList.add(x -> {
+//                return x.get(k).toString().contains(v);
+//            });
+//        });
+//        Predicate<LinkedTreeMap<String, ?>> compositePredicate = predicateList.get(0);
+//        for (int i = 1; i < predicateList.size(); i++) {
+//            compositePredicate = compositePredicate.and(predicateList.get(i));
+//        }
+//        Optional<List<LinkedTreeMap<String, ?>>> linkedTreeMaps = Optional.ofNullable(stream
+//                .filter(compositePredicate)
+//                .limit(20)
+//                .collect(Collectors.toList()));
+//        return ResponseEntity.of(linkedTreeMaps);
 //    }
 
     @ResponseStatus(value = HttpStatus.OK)
-    @Description(value = "curl --location --request GET 'http://localhost:8080/api/WineGlass/wineSelection_2' --header 'Content-Type: application/json' --data-raw '{\n" +
-            "    \"qry\": {\n" +
-            "        \"country\": [\n" +
-            "            \"Spain\"\n" +
-            "        ],\n" +
-            "        \"description\": [\n" +
-            "            \"berry\",\n" +
-            "            \"gummy\",\n" +
-            "            \"chocolaty\"\n" +
-            "        ],\n" +
-            "        \"variety\": [\n" +
-            "        \t\"Garnacha\"\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}'")
-    @GetMapping(path = "/wineSelection_2", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection_2(
+    @ResponseBody
+    @GetMapping(path = "/wineSelection", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection(
             @RequestBody final WineRequestData wineRequestData) {
-        LOGGER.config(()-> "wineSelection predicates: ".concat(wineRequestData.toString()));
         Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
         List<Predicate<LinkedTreeMap<String, ?>>> predicateList = new ArrayList<>();
-        wineRequestData.getQry().forEach((String k, Set<String> v) -> {
+        wineRequestData.getWineSelection().forEach((String k, Set<String> v) -> {
             predicateList.add(x -> {
                 return Objects.nonNull(x.get(k));
             });
@@ -205,5 +172,5 @@ public class WineResource {
 @Data
 class WineRequestData implements Serializable {
     private static final long serialVersionUID = -5064574995574971723L;
-    Map<String, Set<String>> qry = new HashMap<>();
+    Map<String, Set<String>> wineSelection = new HashMap<>();
 }
