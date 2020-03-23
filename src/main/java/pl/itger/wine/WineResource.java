@@ -142,7 +142,7 @@ public class WineResource {
 
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    @GetMapping(path = "/wineSelection", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/wineSelection",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection(
             @RequestBody final WineRequestData wineRequestData) {
         Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
