@@ -6,6 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -33,6 +36,7 @@ import java.util.stream.Stream;
  */
 @RestController
 @RequestMapping("/api/WineGlass")
+@Tag(name = "WineGlass", description = "the Wine Selection API")
 public class WineResource {
     private final static Logger LOGGER = Logger.getLogger(WineResource.class.getName());
     private static Optional<ArrayList<LinkedTreeMap<String, ?>>> optionalLinkedTreeMaps = Optional.empty();
@@ -76,6 +80,7 @@ public class WineResource {
         LOGGER.info("init() END");
     }
 
+    @Operation(summary = "Returns total count of wine items",  tags = {"WineGlass"})
     @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> count() {
         Stream<LinkedTreeMap<String, ?>> stream;
@@ -84,6 +89,7 @@ public class WineResource {
         return ResponseEntity.of(count);
     }
 
+    @Operation(summary = "Returns the available fields list", description = "", tags = {"WineGlass"})
     @GetMapping(path = "/available_fields", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Set<String>> available_fields() {
         /**
@@ -138,12 +144,15 @@ public class WineResource {
 //                .collect(Collectors.toList()));
 //        return ResponseEntity.of(linkedTreeMaps);
 //    }
+    @Operation(summary = "Returns wine selection list based on critera", description = "", tags = {"WineGlass"})
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     @PostMapping(path = "/wineSelection", consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection(
-            @RequestBody final WineRequestData wineRequestData) {
+            @Parameter(required = true,
+                       description = "Sample json query:  { \"wineSelection\": { \"description\": [\"blackberry finish\", \"chocolate\", \"tannic\"], \"country\": [\"Argentina\"] } }")
+            @RequestBody(required = true) final WineRequestData wineRequestData) {
         Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
         List<Predicate<LinkedTreeMap<String, ?>>> predicateList = new ArrayList<>();
         wineRequestData.getWineSelection().forEach((String k, Set<String> v) -> {
