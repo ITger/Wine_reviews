@@ -22,6 +22,8 @@ curl -X POST "http://wine-resource.appspot.com/api/WineGlass/wineSelection" -H "
 
 curl -X POST "http://wine-resource.appspot.com/api/WineGlass/wineSelection" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"wineSelection\":{\"country\":[\"Spain\"],\"description\":[\"spicy\",\"berry\",\"herbal\"]}}"
 
+curl -X POST "http://wine-resource.appspot.com/api/WineGlass/wineSelection" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"wineSelection\":{\"description\":[\"tomato\",\"fresh\",\"juicy\"]}}"
+
 Details here: https://zerynger.wordpress.com/2020/03/19/wine-reviews-with-java-stream-api-and-google-cloud/
 
 
