@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
-
 import lombok.Data;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -26,6 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+//import org.springframework.web.bind.annotation.*;
 
 /**
  * http://localhost:8081/v2/api-docs
@@ -110,7 +110,6 @@ public class WineResource {
      * "variety": "Tempranillo"
      * }
      *
-     *
      * @return List<LinkedTreeMap < String, ?>>
      */
 //    @ResponseStatus(value = HttpStatus.OK)
@@ -139,22 +138,18 @@ public class WineResource {
 //                .collect(Collectors.toList()));
 //        return ResponseEntity.of(linkedTreeMaps);
 //    }
-
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    @PostMapping(path = "/wineSelection",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/wineSelection", consumes = MediaType.APPLICATION_JSON_VALUE,
+                 produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection(
             @RequestBody final WineRequestData wineRequestData) {
         Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
         List<Predicate<LinkedTreeMap<String, ?>>> predicateList = new ArrayList<>();
         wineRequestData.getWineSelection().forEach((String k, Set<String> v) -> {
-            predicateList.add(x -> {
-                return Objects.nonNull(x.get(k));
-            });
+            predicateList.add(x -> Objects.nonNull(x.get(k)));
             v.forEach(y -> {
-                predicateList.add(xx -> {
-                    return xx.get(k).toString().contains(y.toString());
-                });
+                predicateList.add(xx -> xx.get(k).toString().contains(y));
             });
         });
         Predicate<LinkedTreeMap<String, ?>> compositePredicate = predicateList.get(0);
