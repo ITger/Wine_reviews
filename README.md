@@ -18,10 +18,10 @@ curl -X GET "http://wine-resource.appspot.com/api/WineGlass/count" -H "accept: *
 
 curl -X GET "http://wine-resource.appspot.com/api/WineGlass/available_fields" -H "accept: */*"
 
-curl -X GET "http://wine-resource.appspot.com/api/WineGlass/wineSelection?country=Spain&description=horseradish&variety=Tempranillo" -H "accept: */*"
+curl -X POST "http://wine-resource.appspot.com/api/WineGlass/wineSelection" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"wineSelection\":{\"description\":[\"blackberry finish\",\"chocolate\",\"tannic\"],\"country\":[\"Argentina\"]}}"
 
-curl -X GET "http://wine-resource.appspot.com/api/WineGlass/wineSelection?country=Spain&variety=Red%20Blend&description=aromas%20of%20chewing%20gum" -H "accept: */*"
+curl -X POST "http://wine-resource.appspot.com/api/WineGlass/wineSelection" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"wineSelection\":{\"country\":[\"Spain\"],\"description\":[\"spicy\",\"berry\",\"herbal\"]}}"
 
-Details (in Polish) here: https://zerynger.wordpress.com/2020/03/19/wino-i-stream-api/
+Details here: https://zerynger.wordpress.com/2020/03/19/wine-reviews-with-java-stream-api-and-google-cloud/
 
 
