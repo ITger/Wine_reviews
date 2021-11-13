@@ -37,8 +37,6 @@ public class WineData {
         Gson gson = new GsonBuilder().create();
         Type listType = new TypeToken<ArrayList<LinkedTreeMap<String, Object>>>() {
         }.getType();
-        int i = 0;
-        logger.info("*** 1");
         Resource resource = new ClassPathResource("wine_data/winemag-data-130k-v2.json");
         this.wineData = gson.fromJson(new FileReader(resource.getFile()), listType);
         logger.info("***  optionalLinkedTreeMaps.isEmpty(): " + wineData.isEmpty());
