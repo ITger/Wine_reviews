@@ -10,5 +10,4 @@ public class Wine_data_application {
         SpringApplication.run(Wine_data_application.class, args);
     }
 
-
 }

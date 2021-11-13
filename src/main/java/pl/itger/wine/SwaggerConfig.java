@@ -28,14 +28,4 @@ public class SwaggerConfig {
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
 
-//    private ApiInfo metadata() {
-//        ApiInfo apiInfo = new ApiInfo("Wine resource API",
-//                "Wine resource",
-//                "API TOS",
-//                "Terms of service",
-//                new Contact("Piotr Zerynger", "itger.pl", "p.zerynger@gmail.com"),
-//                "License of API", "API license URL", Collections.emptyList());
-//        return apiInfo;
-//    }
-
 }
