@@ -27,3 +27,4 @@ curl -X POST ~~"http://wine-resource.appspot.com/api/WineGlass/wineSelection"~~ 
 Details here: https://zerynger.wordpress.com/2020/03/19/wine-reviews-with-java-stream-api-and-google-cloud/
 
 
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=ITger&show_icons=true&theme=radical)](https://github.com/anuraghazra/github-readme-stats)
