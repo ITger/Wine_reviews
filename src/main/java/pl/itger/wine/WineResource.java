@@ -69,7 +69,7 @@ public class WineResource {
     }
 
     /**
-     * Sample request:
+     * Sample request (where 'description and 'country' are properties from 'available_properties' service):
      * { "wineSelection": {
      * "description": [ "blackberry finish", "chocolate", "tannic" ],
      * "country": [ "Argentina" ]
@@ -109,7 +109,7 @@ public class WineResource {
         Stream<LinkedTreeMap<String, Object>> stream = wineData.getWineData().stream();//.orElseGet(Stream::empty);
         Optional<List<LinkedTreeMap<String, ?>>> linkedTreeMaps = Optional.ofNullable(stream
                 .filter(compositePredicate)
-                .limit(20)
+                .limit(100)
                 .collect(Collectors.toList()));
         return ResponseEntity.of(linkedTreeMaps);
     }

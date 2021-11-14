@@ -1,29 +1,32 @@
 # Wine_reviews
-wine reviews with variety, location, winery, price, and description
+## Wine reviews with variety, location, winery, price, and description.
 
-Sample project on how to parse a large json file, 
-how to use composite predicates on java stream.
 All the dataset resides in-memory.
 
-The dataset was taken from https://www.kaggle.com/zynicide/wine-reviews#winemag-data-130k-v2.json
-To use this sample project you must download the winemag-data-130k-v2.json to the src/main/resources/ folder!
+The dataset was taken from [www.kaggle.com](https://www.kaggle.com/zynicide/wine-reviews#winemag-data-130k-v2.json)
+To use this sample project you must download the winemag-data-130k-v2.json. 
+In application.properties, under 'wine.data.file' property, you should insert the winemag-data-130k-v2.json location.
+Currently, only a small subset of the dataset is available on the resources folder.
 
-<s>This sample is running on Google cloud: http://wine-resource.appspot.com/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config </s>
+![actuator](Screenshot from 2021-11-14 12-28-32.png)
+![properties](Screenshot from 2021-11-14 12-33-01.png)
+![wineSelection](Screenshot from 2021-11-14 12-24-10.png)
+![wineSelection](Screenshot from 2021-11-14 12-38-53.png)
 
-Sample queries:
+http://localhost:8081/swagger-ui.html endpoint is also available.
 
-<b>The following endpoints are no longer accessible!</b>
+Running on docker is easy:
 
-curl -X GET ~~"http://wine-resource.appspot.com/api/WineGlass/count"~~ -H "accept: */*"
+`mvn clean install`
 
-curl -X GET ~~"http://wine-resource.appspot.com/api/WineGlass/available_fields"~~ -H "accept: */*"
+`mvn spring-boot:build-image`
 
-curl -X POST ~~"http://wine-resource.appspot.com/api/WineGlass/wineSelection"~~ -H "accept: application/json" -H "Content-Type: application/json" -d "{\"wineSelection\":{\"description\":[\"blackberry finish\",\"chocolate\",\"tannic\"],\"country\":[\"Argentina\"]}}"
+finally:
 
-curl -X POST ~~"http://wine-resource.appspot.com/api/WineGlass/wineSelection"~~ -H "accept: application/json" -H "Content-Type: application/json" -d "{\"wineSelection\":{\"country\":[\"Spain\"],\"description\":[\"spicy\",\"berry\",\"herbal\"]}}"
+`docker run -d -p 8099:8081 -it itger/wine_data_repo`
+![docker run](Screenshot from 2021-11-14 12-48-55.png)
 
-curl -X POST ~~"http://wine-resource.appspot.com/api/WineGlass/wineSelection"~~ -H "accept: application/json" -H "Content-Type: application/json" -d "{\"wineSelection\":{\"description\":[\"tomato\",\"fresh\",\"juicy\"]}}"
-
-Details here: https://zerynger.wordpress.com/2020/03/19/wine-reviews-with-java-stream-api-and-google-cloud/
+![wineSelection](Screenshot from 2021-11-14 12-51-09.png)
 
 
+~~Details here: https://zerynger.wordpress.com/2020/03/19/wine-reviews-with-java-stream-api-and-google-cloud/~~
