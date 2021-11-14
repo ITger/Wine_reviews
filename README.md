@@ -29,4 +29,5 @@ finally:
 ![wineSelection](Screenshot from 2021-11-14 12-51-09.png)
 
 
-~~Details here: https://zerynger.wordpress.com/2020/03/19/wine-reviews-with-java-stream-api-and-google-cloud/~~
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=ITger&show_icons=true&theme=radical)](https://github.com/anuraghazra/github-readme-stats)
+
