@@ -8,7 +8,7 @@ To use this sample project you must download the winemag-data-130k-v2.json.
 In application.properties, under 'wine.data.file' property, you should insert the winemag-data-130k-v2.json location.
 Currently, only a small subset of the dataset is available on the resources folder.
 
-![actuator](Screenshot from 2021-11-14 12-28-32.png)
+![actuator](./Screenshot from 2021-11-14 12-28-32.png)
 ![properties](Screenshot from 2021-11-14 12-33-01.png)
 ![wineSelection](Screenshot from 2021-11-14 12-24-10.png)
 ![wineSelection](Screenshot from 2021-11-14 12-38-53.png)
