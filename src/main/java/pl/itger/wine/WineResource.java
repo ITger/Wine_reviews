@@ -1,173 +1,115 @@
 package pl.itger.wine;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
-import com.google.gson.reflect.TypeToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.io.*;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
+import javax.validation.Valid;
+import java.io.Serializable;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//import org.springframework.web.bind.annotation.*;
 
 /**
- * http://localhost:8081/v2/api-docs
+ * http://localhost:8081/v3/api-docs
  * http://localhost:8081/swagger-ui.html
  */
 @RestController
 @RequestMapping("/api/WineGlass")
-@Tag(name = "WineGlass", description = "the Wine Selection API")
+@Tag(name = "WineGlass",
+     description = "the Wine Selection API")
 public class WineResource {
-    private final static Logger LOGGER = Logger.getLogger(WineResource.class.getName());
-    private static Optional<ArrayList<LinkedTreeMap<String, ?>>> optionalLinkedTreeMaps = Optional.empty();
-    private static ArrayList<LinkedTreeMap<String, ?>> list = new ArrayList<>();
+    private final static org.slf4j.Logger logger = LoggerFactory.getLogger(WineData.class);
 
-    @PostConstruct
-    public void init() throws IOException {
-        LOGGER.setLevel(Level.ALL);
-        LOGGER.info("init() START");
-        Gson gson = new GsonBuilder().create();
-        Type listType = new TypeToken<ArrayList<LinkedTreeMap<String, ?>>>() {
-        }.getType();
-        JsonObject jsonObject = new JsonObject();
-        JsonElement jsonElement = jsonObject;
-        int i = 0;
-        LOGGER.info("*** 1");
-        Resource resource = new ClassPathResource("winemag-data-130k-v2.json");
-        final WeakReference<Resource> ref = new WeakReference<>(resource);
-        InputStream inputStream = ref.get().getInputStream();
-        resource = null;
-        while (ref.get() != null) {
-            System.gc();
-        }
-        LOGGER.info("*** 2");
-        try {
-            Reader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-            final WeakReference<Reader> readerWeakReference = new WeakReference<>(bufferedReader);
-            try {
-                optionalLinkedTreeMaps = Optional.ofNullable(gson.fromJson(readerWeakReference.get(), listType));
-            } finally {
-                bufferedReader.close();
-                bufferedReader = null;
-                while (readerWeakReference.get() != null) {
-                    System.gc();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        LOGGER.info("***  optionalLinkedTreeMaps.isEmpty(): " + optionalLinkedTreeMaps.isEmpty());
-        LOGGER.info("init() END");
+    @Autowired
+    private WineData wineData;
+
+    private Set<String> propertiesSet;
+
+    @Cacheable(value = "wineItemsCount")
+    @Operation(summary = "Returns total count of wine items",
+               tags = {"WineGlass"})
+    @GetMapping(path = "/count",
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Integer> count() {
+        final Integer[] count = new Integer[1];
+        //wineData.getWineData().ifPresentOrElse(linkedTreeMaps -> count[0] = linkedTreeMaps.size(), () -> count[0] = 0);
+        int s = wineData.getWineData().size();
+        //logger.info("total count of wine items: " + count[0]);
+        logger.info("total count of wine items: " + s);
+        return ResponseEntity.of(Optional.of(s));
     }
 
-    @Operation(summary = "Returns total count of wine items",  tags = {"WineGlass"})
-    @GetMapping(path = "/count", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> count() {
-        Stream<LinkedTreeMap<String, ?>> stream;
-        stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
-        Optional<Long> count = Optional.ofNullable(stream.count());
-        return ResponseEntity.of(count);
-    }
-
-    @Operation(summary = "Returns the available fields list", description = "", tags = {"WineGlass"})
-    @GetMapping(path = "/available_fields", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Set<String>> available_fields() {
-        /**
-         * returns fields name set
-         * use of optional
-         * use of parallel stream
-         */
-        Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
-        Optional<Set<String>> stringSet = Optional.ofNullable(stream
-                .limit(1)
-                .map(e -> e.keySet())
+    @Cacheable(value = "wine_properties")
+    @Operation(summary = "Returns the available properties name set",
+               description = "Properties name set",
+               tags = {"WineGlass"})
+    @GetMapping(path = "/available_properties",
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Set<String>> available_properties() {
+        logger.info("available_properties call");
+        Set<String> keySet = this.wineData.getWineData().stream().limit(1)
+                .map(LinkedTreeMap::keySet)
                 .sorted()
                 .flatMap(Set::stream)
-                .collect(Collectors.toUnmodifiableSet()));
-        LOGGER.config("available_fields: " + stringSet.toString());
-        return ResponseEntity.of(stringSet);
+                .collect(Collectors.toUnmodifiableSet());
+        return ResponseEntity.of(Optional.of(keySet));
     }
 
     /**
-     * Sample request:
-     * {
-     * "country": "Spain",
-     * "description":"horseradish",
-     * "variety": "Tempranillo"
-     * }
+     * Sample request (where 'description and 'country' are properties from 'available_properties' service):
+     * { "wineSelection": {
+     * "description": [ "blackberry finish", "chocolate", "tannic" ],
+     * "country": [ "Argentina" ]
+     * } }
      *
      * @return List<LinkedTreeMap < String, ?>>
      */
-//    @ResponseStatus(value = HttpStatus.OK)
-//    @GetMapping(path = "/wineSelection", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection(
-//            @RequestBody Map<String, String> stringMapQueryPredicates) {
-//        LOGGER.config("wineSelection predicates: ".concat(stringMapQueryPredicates.toString()));
-//        Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
-//        List<Predicate<LinkedTreeMap<String, ?>>> predicateList = new ArrayList<>();
-//        stringMapQueryPredicates.forEach((k, v) -> {
-//            predicateList.add(x -> {
-//                return Objects.nonNull(x.get(k));
-//            });
-//            predicateList.add(x -> {
-//                return x.get(k).toString().contains(v);
-//            });
-//        });
-//        Predicate<LinkedTreeMap<String, ?>> compositePredicate = predicateList.get(0);
-//        for (int i = 1; i < predicateList.size(); i++) {
-//            compositePredicate = compositePredicate.and(predicateList.get(i));
-//        }
-//        Optional<List<LinkedTreeMap<String, ?>>> linkedTreeMaps = Optional.ofNullable(stream
-//                .filter(compositePredicate)
-//                .limit(20)
-//                .collect(Collectors.toList()));
-//        return ResponseEntity.of(linkedTreeMaps);
-//    }
-    @Operation(summary = "Returns wine selection list based on critera", description = "", tags = {"WineGlass"})
+    @Cacheable(value = "wine_Selection")
+    @Operation(summary = "Returns wine selection list based on criteria",
+               description = "wine selection list",
+               tags = {"WineGlass"})
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
-    @PostMapping(path = "/wineSelection", consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(path = "/wineSelection",
+                 consumes = MediaType.APPLICATION_JSON_VALUE,
                  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<LinkedTreeMap<String, ?>>> wineSelection(
             @Parameter(required = true,
                        description = "Sample json query:  { \"wineSelection\": { \"description\": [\"blackberry finish\", \"chocolate\", \"tannic\"], \"country\": [\"Argentina\"] } }")
-            @RequestBody(required = true) final WineRequestData wineRequestData) {
-        Stream<LinkedTreeMap<String, ?>> stream = optionalLinkedTreeMaps.map(Collection::parallelStream).orElseGet(Stream::empty);
+            @Valid @RequestBody() final WineRequestData wineRequestData) {
+        logger.info("Predicate: " + wineRequestData.getWineSelection().toString());
+        if (null == propertiesSet) {
+            available_properties();
+        }
         List<Predicate<LinkedTreeMap<String, ?>>> predicateList = new ArrayList<>();
-        wineRequestData.getWineSelection().forEach((String k, Set<String> v) -> {
-            predicateList.add(x -> Objects.nonNull(x.get(k)));
-            v.forEach(y -> {
-                predicateList.add(xx -> xx.get(k).toString().contains(y));
-            });
-        });
+        BiConsumer<String, Set<String>> stringSetBiConsumer = (String k, Set<String> v) -> {
+            boolean add = predicateList.add(x -> Objects.nonNull(x.get(k)));
+            v.forEach(y -> predicateList.add(xx -> xx.get(k).toString().contains(y)));
+        };
+
+        wineRequestData.getWineSelection().forEach(stringSetBiConsumer);
         Predicate<LinkedTreeMap<String, ?>> compositePredicate = predicateList.get(0);
         for (int i = 1; i < predicateList.size(); i++) {
             compositePredicate = compositePredicate.and(predicateList.get(i));
         }
+
+        Stream<LinkedTreeMap<String, Object>> stream = wineData.getWineData().stream();//.orElseGet(Stream::empty);
         Optional<List<LinkedTreeMap<String, ?>>> linkedTreeMaps = Optional.ofNullable(stream
                 .filter(compositePredicate)
-                .limit(20)
+                .limit(100)
                 .collect(Collectors.toList()));
         return ResponseEntity.of(linkedTreeMaps);
     }

@@ -1,5 +1,0 @@
-runtime: java11
-instance_class: F4
-
-env_variables:
-  JAVA_TOOL_OPTIONS: "-XX:MaxRAM=1024m -Xmx512m"
