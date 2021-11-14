@@ -8,10 +8,10 @@ To use this sample project you must download the winemag-data-130k-v2.json.
 In application.properties, under 'wine.data.file' property, you should insert the winemag-data-130k-v2.json location.
 Currently, only a small subset of the dataset is available on the resources folder.
 
-![actuator](Screenshot from 2021-11-14 12-28-32.png)
-![properties](Screenshot from 2021-11-14 12-33-01.png)
-![wineSelection](Screenshot from 2021-11-14 12-24-10.png)
-![wineSelection](Screenshot from 2021-11-14 12-38-53.png)
+![actuator](Screenshot_from_2021-11-14_12-28-32.png)
+![properties](Screenshot_from_2021-11-14_12-33-01.png)
+![wineSelection](Screenshot_from_2021-11-14_12-24-10.png)
+![wineSelection](Screenshot_from_2021-11-14_12-38-53.png)
 
 http://localhost:8081/swagger-ui.html endpoint is also available.
 
@@ -24,9 +24,9 @@ Running on docker is easy:
 finally:
 
 `docker run -d -p 8099:8081 -it itger/wine_data_repo`
-![docker run](Screenshot from 2021-11-14 12-48-55.png)
+![docker run](Screenshot_from_2021-11-14_12-48-55.png)
 
-![wineSelection](Screenshot from 2021-11-14 12-51-09.png)
+![wineSelection](Screenshot_from_2021-11-14_12-51-09.png)
 
 
-~~Details here: https://zerynger.wordpress.com/2020/03/19/wine-reviews-with-java-stream-api-and-google-cloud/~~
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=ITger&show_icons=true&theme=radical)](https://github.com/anuraghazra/github-readme-stats)
